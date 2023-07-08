@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<AdvancedView />} />
         <Route path="/advanced-view" element={<AdvancedView />} />
       </Routes>
     </>
