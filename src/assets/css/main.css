@@ -1,0 +1,49 @@
+@import 'fonts.css';
+@import 'base.css';
+
+body {
+    font-family: 'Inter';
+    background: theme('colors.black');
+}
+
+.border-gradientMain {
+    position: relative;
+    background: theme('colors.black');
+    border-radius: 4px;
+}
+
+.border-gradientMain::before {
+    content: "";
+    position: absolute;
+    width: calc(100% + 4px);
+    height:calc(100% + 4px);
+    left: -1.9px;
+    top: -1.9px;
+    background: theme('backgroundImage.gradientMain');
+    border-radius: 4px;
+    z-index: -1;
+  }
+
+  .css-mohuvp-dummyInput-DummyInput {
+    position: absolute !important;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    border: 1px solid theme('colors.purple');
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: theme('colors.blueDark');
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+
+  .text-shadow-pink {
+    text-shadow: 0px 0px 3.5px theme('colors.pink');
+  }

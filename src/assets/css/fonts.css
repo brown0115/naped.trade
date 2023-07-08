@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/Inter-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Inter';
+    font-style: bold;
+    font-weight: 700;
+    src: url('../fonts/Inter-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'barlow';
+    font-weight: 800;
+    src: url('../fonts/Barlow-ExtraBold.ttf') format('truetype');
+}
+
+.barlow {
+    font-family: 'barlow';
+}
