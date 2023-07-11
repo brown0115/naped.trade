@@ -1,8 +1,8 @@
 import Bitcoin from "../../../../assets/imgs/coin3.svg";
 import Upgrade from "../../../../assets/imgs/upgrade.svg";
-function ClosedTrades() {
+function ClosedTrades({openTradeDetails}) {
   return (
-    <div className="w-full flex flex-col gap-[8px]">
+    <div className="w-full flex flex-col gap-[8px] min-w-max">
       <div className="w-full grid grid-cols-9 place-items-center">
         <p className="text-sm text-white font-bold">Trader</p>
         <p className="text-sm text-white font-bold">Pair</p>
@@ -28,8 +28,8 @@ function ClosedTrades() {
           <p className="text-sm font-bold text-white">x220</p>
           <p className="text-sm font-bold text-white">-</p>
           <p className="text-sm font-bold text-white">-</p>
-          <button className="px-[16px] py-[4px] bg-blue border border-white50 rounded-[5px]">
-            <p className="text-xs font-bold text-white">Close Trade</p>
+          <button onClick={openTradeDetails} className="px-[16px] py-[4px] bg-blue border border-white50 rounded-[5px]">
+            <p className="text-xs font-bold text-white">Details</p>
           </button>
         </div>
       </div>

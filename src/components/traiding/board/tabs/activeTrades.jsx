@@ -3,7 +3,7 @@ import Downgrade from "../../../../assets/imgs/downgrade.svg";
 import Upgrade from "../../../../assets/imgs/upgrade.svg";
 function ActiveTrades() {
   return (
-    <div className="w-full flex flex-col gap-[8px]">
+    <div className="w-full flex flex-col gap-[8px] min-w-max">
       <div className="w-full grid grid-cols-9 place-items-center">
         <p className="text-sm text-white font-bold">Trader</p>
         <p className="text-sm text-white font-bold">Pair</p>

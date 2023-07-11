@@ -33,7 +33,7 @@ function TraidingMain({ mode, mode2, limitMarket }) {
     <div className="w-full">
       <div
         className={`grid ${
-          mode === "advanced" ? "grid-cols-2 gap-x-[15px] gap-y-[21px]" : ""
+          mode === "advanced" ? "sm:grid-cols-2 gap-x-[15px] gap-y-[21px]" : ""
         }`}
       >
         <div className="w-full">
@@ -237,16 +237,16 @@ function TraidingMain({ mode, mode2, limitMarket }) {
             onChange={handleLaverageMultiplierRange}
             className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
           />
-          <div className="flex items-center justify-between gap-[8px] px-[20px]">
+          <div className="flex items-center justify-between gap-[2px] sm:gap-[8px] sm:px-[20px]">
             <p className="text-xs text-white font-normal">1x</p>
             <p className="text-xs text-white font-normal">5x</p>
-            <p className="text-xs text-white font-normal">10x</p>
+            <p className="text-xs hidden sm:block text-white font-normal">10x</p>
             <p className="text-xs text-white font-normal">25x</p>
-            <p className="text-xs text-white font-normal">50x</p>
+            <p className="text-xs hidden sm:block text-white font-normal">50x</p>
             <p className="text-xs text-white font-normal">75x</p>
-            <p className="text-xs text-white font-normal">100x</p>
+            <p className="text-xs hidden sm:block text-white font-normal">100x</p>
             <p className="text-xs text-white font-normal">125x</p>
-            <p className="text-xs text-white font-normal">175x</p>
+            <p className="text-xs hidden sm:block text-white font-normal">175x</p>
             <p className="text-xs text-white font-normal">200x</p>
             <p className="text-xs text-white font-normal">225x</p>
             <p className="text-xs text-white font-normal">250x</p>

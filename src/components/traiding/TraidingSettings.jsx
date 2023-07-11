@@ -44,10 +44,10 @@ function TradingSettings() {
 
       <div className="w-full px-[28px]">
         <div className="w-full grid grid-cols-2 gap-[15px] mt-[10px] mb-[38px]">
-          <button onClick={handleMode2} data-mode2="long" className={`${mode2 === 'long' ? 'bg-blue' : ''} mode2btn transition-all p-[13px] bg-black-500 text-white text-lg font-bold rounded-[10px]`}>
+          <button onClick={handleMode2} data-mode2="long" className={`${mode2 === 'long' ? 'bg-blue' : ''} mode2btn transition-all p-[9px] sm:p-[13px] bg-black-500 text-white text-md sm:text-lg font-bold rounded-[10px]`}>
             Long
           </button>
-           <button onClick={handleMode2} data-mode2="short" className={`${mode2 === 'short' ? 'bg-blue' : ''} mode2btn transition-all p-[13px] bg-black-500 text-white text-lg font-bold rounded-[10px]`}>
+           <button onClick={handleMode2} data-mode2="short" className={`${mode2 === 'short' ? 'bg-blue' : ''} mode2btn transition-all p-[9px] sm:p-[13px] bg-black-500 text-white text-md sm:text-lg font-bold rounded-[10px]`}>
             Short
           </button>
         </div>
