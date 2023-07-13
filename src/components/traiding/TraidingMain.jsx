@@ -11,6 +11,7 @@ function TraidingMain({ mode, mode2, limitMarket }) {
   // Take Profit && stop Less
   const [takeProfit, setTakeProfit] = useState(false);
   const [stopLoss, setStopLoss] = useState(false);
+  const [leverageVal, setLeverageVal] = useState(100);
 
   const handleTakeProfit = () => {
     takeProfit ? setTakeProfit(false) : setTakeProfit(true);
@@ -25,8 +26,8 @@ function TraidingMain({ mode, mode2, limitMarket }) {
   const handleStopLossRange = (event) => {
     const val = event.target.value;
   };
-  const handleLaverageMultiplierRange = (event) => {
-    const val = event.target.value;
+  const handleLeverageMultiplierRange = (event) => {
+    setLeverageVal(event.target.value * 2.5)
   };
 
   return (
@@ -219,8 +220,8 @@ function TraidingMain({ mode, mode2, limitMarket }) {
               <input
                 className="w-full bg-transparent px-[10px]  outline-none border-none"
                 type="number"
-                name=""
-                id=""
+                value={leverageVal}
+                onChange={(e) => setLeverageVal(e.target.value)}
               />
             </div>
           </div>
@@ -234,10 +235,11 @@ function TraidingMain({ mode, mode2, limitMarket }) {
         <div className="flex flex-col gap-[11px] px-[15px]">
           <input
             type="range"
-            onChange={handleLaverageMultiplierRange}
+            value={leverageVal/2.5}
+            onChange={handleLeverageMultiplierRange}
             className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
           />
-          <div className="flex items-center justify-between gap-[2px] sm:gap-[8px] sm:px-[20px]">
+          <div className="flex items-center justify-between gap-[2px] sm:gap-[8px] sm:px-[20px] !px-0">
             <p className="text-xs text-white font-normal">1x</p>
             <p className="text-xs text-white font-normal">5x</p>
             <p className="text-xs hidden sm:block text-white font-normal">10x</p>
@@ -255,7 +257,7 @@ function TraidingMain({ mode, mode2, limitMarket }) {
       </div>
 
       <div className="w-full flex items-center justify-center mt-[27px] mb-[44px]">
-        <button className="w-full max-w-[234px] bg-blue text-white text-lg uppercase font-bold leading-[31px] rounded-[10px]">
+        <button className="w-full max-w-[234px] bg-blue text-white text-lg uppercase font-bold leading-[31px] rounded-[10px] py-[3px]">
           {limitMarket + " " + mode2}
         </button>
       </div>

@@ -46,10 +46,10 @@ function Leaderboard({backToTrades}) {
         <LeaderboardMenu />
       </div>
 
-      <div className="w-full grid grid-cols-1 lg:grid-cols-[70%,auto] gap-[50px]">
-        <div className="fle w-full overflow-auto custom-scrollbar horizontal pb-[15px]">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-[70%,auto] gap-[50px] pb-[15px]">
+        <div className="fle w-full overflow-auto custom-scrollbar horizontal">
           <div className="flex flex-col gap-[10px] min-w-[600px]">
-            <div className="w-full grid grid-cols-5 lg:max-w-[70%] place-items-start">
+            <div className="w-full grid grid-cols-5 place-items-start">
               <p className="text-sm text-white font-bold w-full text-center">
                 #
               </p>
@@ -116,10 +116,10 @@ function Leaderboard({backToTrades}) {
             </div>
           </div>
         </div>
-        <div className="w-full flex justify-center translate-y-[-30px]">
+        <div className="w-full flex justify-center h-full">
           <div className="w-full max-w-[224px] flex flex-col gap-[10px] w-full">
-            <p className="text-sm text-white font-bold">Trader</p>
-            <div className="p-[25px] bg-blueDark500 flex flex-col gap-[25px] rounded-[10px]">
+            <p className="text-sm text-white font-bold text-center">Your Stats</p>
+            <div className="p-[25px] bg-blueDark500 flex flex-col gap-[25px] rounded-[10px] h-full justify-center">
               <div className="w-full grid grid-cols-2">
                 <p className="text-sm text-white font-bold">#</p>
                 <p className="text-sm text-white font-bold">32</p>

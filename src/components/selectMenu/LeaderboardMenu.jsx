@@ -2,8 +2,9 @@ import React from "react";
 import Select from "react-select";
 
 const options = [
-  { value: "Limit", label: "Limit" },
-  { value: "Market", label: "Market" },
+  { value: "Day", label: "Day" },
+  { value: "Week", label: "Week" },
+  { value: "Month", label: "Month" },
 ];
 
 const DropdownIndicator = (props) => {
@@ -41,7 +42,7 @@ const customComponents = {
 const customClassNames = {
   control: (state) =>
     "!bg-transparent !shadow-none !outline-none !border-none !min-h-max !cursor-pointer",
-  option: (state) => "!bg-blueDark hover:!bg-black",
+  option: (state) => "!bg-blueDark hover:!bg-black !text-white",
   menu: () => "!bg-blueDark !min-w-[120px]",
   singleValue: (state) => "!font-bold !text-white !text-sm",
   indicatorsContainer: () => "!items-end !mb-[10px]",
