@@ -11,6 +11,7 @@ export default {
         'black40': "rgba(0, 0, 0, 0.4)",
         'black-500': '#0E0D14',
         'blue': "#5600C3",
+        "gray": "#b7b7b7",
         'grayDark': "#ABABAB",
         'grayDark2': '#BCBCBC',
         'white': "#FFFFFF",

@@ -22,6 +22,7 @@ function TraidingMain({ mode, mode2, limitMarket }) {
 
   const handleTakeProfitRange = (event) => {
     const val = event.target.value;
+    console.log(val)
   };
   const handleStopLossRange = (event) => {
     const val = event.target.value;
@@ -117,6 +118,8 @@ function TraidingMain({ mode, mode2, limitMarket }) {
                   <input
                     type="range"
                     onChange={handleTakeProfitRange}
+                    min={0}
+                    max={900}
                     className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
                   />
                   <div className="flex items-center justify-between gap-[15px] px-[20px]">
