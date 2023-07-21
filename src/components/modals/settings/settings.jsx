@@ -1,19 +1,24 @@
 import { useState } from "react";
 
-function Settings() {
+function Settings({ stopLossMode, takeProfitMode, handleStopLossMode, handleLossProfitMode }) {
   const [panelSide, setPanelSide] = useState("left");
-  const [lossMode, setLossMode] = useState("usd");
-  const [profitMode, setProfitMode] = useState("usd");
+  const [lossMode, setLossMode] = useState(stopLossMode);
+  const [profitMode, setProfitMode] = useState(takeProfitMode);
+
   const switchPanelSide = (e) => {
     setPanelSide(e.target.id);
   };
-  const handleLossMode = (e)=> {
+  const handleLossMode = (e) => {
     let isChecked = e.target.checked;
     isChecked ? setLossMode("percentage") : setLossMode("usd");
+
+    isChecked ? handleStopLossMode("percentage") : handleStopLossMode("usd");
   };
-  const handleProfitMode = (e)=> {
+  const handleProfitMode = (e) => {
     let isChecked = e.target.checked;
     isChecked ? setProfitMode("percentage") : setProfitMode("usd");
+
+    isChecked ? handleLossProfitMode('percentage') : handleLossProfitMode('usd')
   };
   return (
     <div className="settings-modal w-full sm:max-w-[496px] absolute sm:right-[25px] right-0 top-full text-white bg-blueDark border border-white75 py-[17px] sm:rounded-[10px] z-[99] select-none">
@@ -104,7 +109,13 @@ function Settings() {
             <div className="w-full flex sm:flex-row flex-col items-start gap-[6px] sm:gap-[0] sm:items-center justify-between pl-[30px] sm:pl-[40px]">
               <p className="font-normal text-white text-base">Stop Loss Mode</p>
               <label className="relative inline-flex items-center cursor-pointer">
-                <input onChange={handleLossMode} checked={lossMode === 'percentage' ? true : false} type="checkbox" value="" className="sr-only peer" />
+                <input
+                  onChange={handleLossMode}
+                  checked={lossMode === "percentage" ? true : false}
+                  type="checkbox"
+                  value=""
+                  className="sr-only peer"
+                />
                 <div className="relative w-[164px] bg-black-500 rounded-[10px] px-[3px] gap-[4px] py-[2px] grid  grid-cols-[72px,87px] gap-[4px] before:content-[''] before:absolute before:w-[72px] peer-checked:before:left-[82px] peer-checked:before:w-[80px] peer-checked:before:right-0 before:h-[calc(100%-5px)] before:bg-blue before:rounded-[10px] before:top-[50%] before:translate-y-[-50%] before:left-[3px] transition-all before:transition-all">
                   <p className="z-[9] font-normal text-white text-sm text-center w-full">
                     USD
@@ -116,9 +127,17 @@ function Settings() {
               </label>
             </div>
             <div className="w-full flex sm:flex-row flex-col items-start gap-[6px] sm:gap-[0] sm:items-center justify-between pl-[30px] sm:pl-[40px]">
-              <p className="font-normal text-white text-base">Take Profit Mode</p>
+              <p className="font-normal text-white text-base">
+                Take Profit Mode
+              </p>
               <label className="relative inline-flex items-center cursor-pointer">
-                <input onChange={handleProfitMode} checked={profitMode === 'percentage' ? true : false} type="checkbox" value="" className="sr-only peer" />
+                <input
+                  onChange={handleProfitMode}
+                  checked={profitMode === "percentage" ? true : false}
+                  type="checkbox"
+                  value=""
+                  className="sr-only peer"
+                />
                 <div className="relative w-[164px] bg-black-500 rounded-[10px] px-[3px] gap-[4px] py-[2px] grid  grid-cols-[72px,87px] gap-[4px] before:content-[''] before:absolute before:w-[72px] peer-checked:before:left-[82px] peer-checked:before:w-[80px] peer-checked:before:right-0 before:h-[calc(100%-5px)] before:bg-blue before:rounded-[10px] before:top-[50%] before:translate-y-[-50%] before:left-[3px] transition-all before:transition-all">
                   <p className="z-[9] font-normal text-white text-sm text-center w-full">
                     USD

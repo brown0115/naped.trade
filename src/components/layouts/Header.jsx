@@ -10,7 +10,8 @@ import DotMenuIcon from "../icons/DotMenuIcon";
 import Settings from "../modals/settings/settings";
 import { useState } from "react";
 
-function Header() {
+function Header({stopLossMode, takeProfitMode, handleStopLossMode, handleLossProfitMode}) {
+
   const [settingModal, setSettingModal] = useState(false)
   const handleSettingModal = ()=> {
     settingModal ? setSettingModal(false) : setSettingModal(true)
@@ -43,7 +44,7 @@ function Header() {
             </div>
             
           </div>
-          {settingModal ? (<Settings />) : <></>}
+          {settingModal ? (<Settings handleStopLossMode={handleStopLossMode} handleLossProfitMode={handleLossProfitMode} stopLossMode={stopLossMode} takeProfitMode={takeProfitMode} />) : <></>}
 
         </div>
       </div>

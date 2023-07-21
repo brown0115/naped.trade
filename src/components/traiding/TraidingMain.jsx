@@ -2,7 +2,13 @@ import CollateralMenu from "../selectMenu/CollateralMenu";
 import { useState } from "react";
 import TraidingDetails from "./Details";
 
-function TraidingMain({ mode, mode2, limitMarket }) {
+function TraidingMain({
+  mode,
+  mode2,
+  limitMarket,
+  stopLossModeIs,
+  takeProfitModeIs,
+}) {
   // Decimal Input
   const [decimalInputValue, setDecimalInputValue] = useState("10.00");
   const handleDecimalInputChange = (e) => {
@@ -22,13 +28,12 @@ function TraidingMain({ mode, mode2, limitMarket }) {
 
   const handleTakeProfitRange = (event) => {
     const val = event.target.value;
-    console.log(val)
   };
   const handleStopLossRange = (event) => {
     const val = event.target.value;
   };
   const handleLeverageMultiplierRange = (event) => {
-    setLeverageVal(event.target.value * 2.5)
+    setLeverageVal(event.target.value * 2.5);
   };
 
   return (
@@ -61,21 +66,43 @@ function TraidingMain({ mode, mode2, limitMarket }) {
                 $30,184.60000
               </div>
             </div>
-
-            <div className="flex flex-col gap-[16px]">
-              <p className="font-bold text-white text-sm">Take Profit </p>
-              <div className="min-h-[42px] pl-[14px] pr-[6px] py-[5px] bg-black-500 rounded-[10px] flex items-center justify-between">
-                {takeProfit ? (
-                  <>
-                    $30,184.60000
-                    <div className="flex items-center gap-[5px]">
-                      <span className="text-green">770%</span>
+            {takeProfitModeIs === "percentage" ? (
+              <div className="flex flex-col gap-[16px]">
+                <p className="font-bold text-white text-sm">Take Profit </p>
+                <div className="min-h-[42px] pl-[14px] pr-[6px] py-[5px] bg-black-500 rounded-[10px] flex items-center justify-between">
+                  {takeProfit ? (
+                    <>
+                      $30,184.60000
+                      <div className="flex items-center gap-[5px]">
+                        <span className="text-green">770%</span>
+                        <div
+                          onClick={handleTakeProfit}
+                          className="w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
+                        >
+                          <svg
+                            className="rotate-180"
+                            width="6"
+                            height="7"
+                            viewBox="0 0 6 7"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M3 7L0.401924 0.25L5.59808 0.250001L3 7Z"
+                              fill="#D9D9D9"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="relative flex items-center justify-center w-full">
+                      -
                       <div
                         onClick={handleTakeProfit}
-                        className="w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
+                        className="absolute right-0 w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
                       >
                         <svg
-                          className="rotate-180"
                           width="6"
                           height="7"
                           viewBox="0 0 6 7"
@@ -89,66 +116,81 @@ function TraidingMain({ mode, mode2, limitMarket }) {
                         </svg>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <div className="relative flex items-center justify-center w-full">
-                    -
-                    <div
-                      onClick={handleTakeProfit}
-                      className="absolute right-0 w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
-                    >
-                      <svg
-                        width="6"
-                        height="7"
-                        viewBox="0 0 6 7"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M3 7L0.401924 0.25L5.59808 0.250001L3 7Z"
-                          fill="#D9D9D9"
-                        />
-                      </svg>
+                  )}
+                </div>
+                {takeProfit ? (
+                  <div className="flex flex-col gap-[11px]">
+                    <input
+                      type="range"
+                      onChange={handleTakeProfitRange}
+                      min={0}
+                      max={900}
+                      className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
+                    />
+                    <div className="flex items-center justify-between gap-[15px] px-[20px]">
+                      <p className="text-xs text-white font-normal">100</p>
+                      <p className="text-xs text-white font-normal">250</p>
+                      <p className="text-xs text-white font-normal">500</p>
+                      <p className="text-xs text-white font-normal">750</p>
+                      <p className="text-xs text-white font-normal">900</p>
                     </div>
                   </div>
+                ) : (
+                  <></>
                 )}
               </div>
-              {takeProfit ? (
-                <div className="flex flex-col gap-[11px]">
-                  <input
-                    type="range"
-                    onChange={handleTakeProfitRange}
-                    min={0}
-                    max={900}
-                    className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
-                  />
-                  <div className="flex items-center justify-between gap-[15px] px-[20px]">
-                    <p className="text-xs text-white font-normal">100</p>
-                    <p className="text-xs text-white font-normal">250</p>
-                    <p className="text-xs text-white font-normal">500</p>
-                    <p className="text-xs text-white font-normal">750</p>
-                    <p className="text-xs text-white font-normal">900</p>
+            ) : (
+              <div className="flex flex-col gap-[16px]">
+                <p className="font-bold text-white text-sm">Take Profit</p>
+                <div className="w-full grid grid-cols-2 gap-[10px]">
+                  <div className="text-sm min-h-[42px] pl-[14px] py-[5px] bg-black-500 rounded-[10px] flex items-center">
+                    Price
+                  </div>
+                  <div className="text-sm min-h-[42px] pl-[14px] py-[5px] bg-black-500 rounded-[10px] flex items-center">
+                    <span className="text-green mr-[4px]">+$</span>
+                    Profit
                   </div>
                 </div>
-              ) : (
-                <></>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="flex flex-col gap-[16px]">
-              <p className="font-bold text-white text-sm">Stop Loss </p>
-              <div className="min-h-[42px] pl-[14px] pr-[6px] py-[5px] bg-black-500 rounded-[10px] flex items-center justify-between">
-                {stopLoss ? (
-                  <>
-                    $30,184.60000
-                    <div className="flex items-center gap-[5px]">
-                      <span className="text-red">770%</span>
+            {stopLossModeIs === "percentage" ? (
+              <div className="flex flex-col gap-[16px]">
+                <p className="font-bold text-white text-sm">Stop Loss </p>
+                <div className="min-h-[42px] pl-[14px] pr-[6px] py-[5px] bg-black-500 rounded-[10px] flex items-center justify-between">
+                  {stopLoss ? (
+                    <>
+                      $30,184.60000
+                      <div className="flex items-center gap-[5px]">
+                        <span className="text-red">770%</span>
+                        <div
+                          onClick={handleStopLoss}
+                          className="w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
+                        >
+                          <svg
+                            className="rotate-180"
+                            width="6"
+                            height="7"
+                            viewBox="0 0 6 7"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M3 7L0.401924 0.25L5.59808 0.250001L3 7Z"
+                              fill="#D9D9D9"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="relative flex items-center justify-center w-full">
+                      -
                       <div
                         onClick={handleStopLoss}
-                        className="w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
+                        className="absolute right-0 w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
                       >
                         <svg
-                          className="rotate-180"
                           width="6"
                           height="7"
                           viewBox="0 0 6 7"
@@ -162,52 +204,44 @@ function TraidingMain({ mode, mode2, limitMarket }) {
                         </svg>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <div className="relative flex items-center justify-center w-full">
-                    -
-                    <div
-                      onClick={handleStopLoss}
-                      className="absolute right-0 w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
-                    >
-                      <svg
-                        width="6"
-                        height="7"
-                        viewBox="0 0 6 7"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M3 7L0.401924 0.25L5.59808 0.250001L3 7Z"
-                          fill="#D9D9D9"
-                        />
-                      </svg>
+                  )}
+                </div>
+                {stopLoss ? (
+                  <div className="flex flex-col gap-[11px]">
+                    <input
+                      type="range"
+                      onChange={handleStopLossRange}
+                      className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
+                    />
+                    <div className="flex items-center justify-between gap-[8px] px-[20px]">
+                      <p className="text-xs text-white font-normal">10</p>
+                      <p className="text-xs text-white font-normal">20</p>
+                      <p className="text-xs text-white font-normal">30</p>
+                      <p className="text-xs text-white font-normal">40</p>
+                      <p className="text-xs text-white font-normal">50</p>
+                      <p className="text-xs text-white font-normal">60</p>
+                      <p className="text-xs text-white font-normal">80</p>
+                      <p className="text-xs text-white font-normal">90</p>
                     </div>
                   </div>
+                ) : (
+                  <></>
                 )}
               </div>
-              {stopLoss ? (
-                <div className="flex flex-col gap-[11px]">
-                  <input
-                    type="range"
-                    onChange={handleStopLossRange}
-                    className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
-                  />
-                  <div className="flex items-center justify-between gap-[8px] px-[20px]">
-                    <p className="text-xs text-white font-normal">10</p>
-                    <p className="text-xs text-white font-normal">20</p>
-                    <p className="text-xs text-white font-normal">30</p>
-                    <p className="text-xs text-white font-normal">40</p>
-                    <p className="text-xs text-white font-normal">50</p>
-                    <p className="text-xs text-white font-normal">60</p>
-                    <p className="text-xs text-white font-normal">80</p>
-                    <p className="text-xs text-white font-normal">90</p>
+            ) : (
+              <div className="flex flex-col gap-[16px]">
+                <p className="font-bold text-white text-sm">Stop Loss</p>
+                <div className="w-full grid grid-cols-2 gap-[10px]">
+                  <div className="text-sm min-h-[42px] pl-[14px] py-[5px] bg-black-500 rounded-[10px] flex items-center">
+                    Price
+                  </div>
+                  <div className="text-sm min-h-[42px] pl-[14px] py-[5px] bg-black-500 rounded-[10px] flex items-center">
+                    <span className="text-red mr-[4px]">-$</span>
+                    Loss
                   </div>
                 </div>
-              ) : (
-                <></>
-              )}
-            </div>
+              </div>
+            )}
           </>
         ) : (
           <></>
@@ -238,20 +272,28 @@ function TraidingMain({ mode, mode2, limitMarket }) {
         <div className="flex flex-col gap-[11px] px-[15px]">
           <input
             type="range"
-            value={leverageVal/2.5}
+            value={leverageVal / 2.5}
             onChange={handleLeverageMultiplierRange}
             className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
           />
           <div className="flex items-center justify-between gap-[2px] sm:gap-[8px] sm:px-[20px] !px-0">
             <p className="text-xs text-white font-normal">1x</p>
             <p className="text-xs text-white font-normal">5x</p>
-            <p className="text-xs hidden sm:block text-white font-normal">10x</p>
+            <p className="text-xs hidden sm:block text-white font-normal">
+              10x
+            </p>
             <p className="text-xs text-white font-normal">25x</p>
-            <p className="text-xs hidden sm:block text-white font-normal">50x</p>
+            <p className="text-xs hidden sm:block text-white font-normal">
+              50x
+            </p>
             <p className="text-xs text-white font-normal">75x</p>
-            <p className="text-xs hidden sm:block text-white font-normal">100x</p>
+            <p className="text-xs hidden sm:block text-white font-normal">
+              100x
+            </p>
             <p className="text-xs text-white font-normal">125x</p>
-            <p className="text-xs hidden sm:block text-white font-normal">175x</p>
+            <p className="text-xs hidden sm:block text-white font-normal">
+              175x
+            </p>
             <p className="text-xs text-white font-normal">200x</p>
             <p className="text-xs text-white font-normal">225x</p>
             <p className="text-xs text-white font-normal">250x</p>
