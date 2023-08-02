@@ -13,7 +13,7 @@ function TradingChartHeader() {
         </div>
         <TradingChartHeaderMenu />
       </div>
-      <div class="flex items-center gap-[20px]">
+      <div className="flex items-center gap-[20px]">
         <div className='min-w-max flex flex-col items-center lg:flex-row gap-[4px]'>
             <p className='text-xs sm:text-sm text-gray font-bold'>24h Volume: </p>
             <p className='text-xs sm:text-sm text-white font-bold'>243M</p>

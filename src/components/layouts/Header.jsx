@@ -10,11 +10,24 @@ import DotMenuIcon from "../icons/DotMenuIcon";
 import Settings from "../modals/settings/settings";
 import { useState } from "react";
 
+import { useConnect, useAccount, useDisconnect } from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected'
+
 function Header({stopLossMode, takeProfitMode, handleStopLossMode, handleLossProfitMode}) {
+
+  const { connect, isLoading } = useConnect({
+    connector: new InjectedConnector()
+  });
+  const { address, connector, isConnected } = useAccount()
+  const { disconnect } = useDisconnect()
 
   const [settingModal, setSettingModal] = useState(false)
   const handleSettingModal = ()=> {
     settingModal ? setSettingModal(false) : setSettingModal(true)
+  }
+
+  const connectWallet = () => {
+    !isConnected ? connect(): disconnect();
   }
 
   document.addEventListener('click', (e)=> {
@@ -31,10 +44,13 @@ function Header({stopLossMode, takeProfitMode, handleStopLossMode, handleLossPro
 
         <div className="flex items-center gap-[10px] sm:gap-[33px]">
           <div className="p-[2.2px] bg-gradientMain rounded-[8px] cursor-pointer group">
-            <div className="flex items-center gap-[13px] py-[6px] pl-[14px] pr-[29px] bg-black rounded-[6px] group-hover:bg-transparent transition-all">
+            <button onClick={ connectWallet } className="flex items-center gap-[13px] py-[6px] pl-[14px] pr-[29px] bg-black rounded-[6px] group-hover:bg-transparent transition-all">
               <WalletIcon />
-              <p className="font-normal text-base text-white">Conntect</p>
-            </div>
+              <p className="font-normal text-base text-white">
+                {isConnected && address}
+                {isLoading ? 'Connecting' : 'Connect'}
+              </p>
+            </button>
           </div>
           <div onClick={handleSettingModal} className="settings-btn p-[2.2px] bg-gradientMain rounded-[8px] cursor-pointer group">
             <div className={`${settingModal ? 'bg-transparent' : ''} flex items-center  py-[6px] pl-[6px] pr-[12px] bg-black rounded-[6px] group-hover:bg-transparent transition-all`}>
