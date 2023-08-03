@@ -11,7 +11,10 @@ const socket = io(`${SEVER_URL}`);
 const TradingChartHeader = ({ currency }) => {
   const [ tradePrice, setTradePrice ] = useState(0);
 
+  const listener = 
+
   useEffect(() => {
+    socket.removeAllListeners(`crypto_trade_data`);
     socket.on(`crypto_trade_data`, (data) => {
       const exchange = 'crypto';
       const fromSymbol = data.pair.split('-')[0];
@@ -20,7 +23,7 @@ const TradingChartHeader = ({ currency }) => {
       const tradeTime = parseInt(data.t, 10);
       // const channelString = `0~${exchange}~${fromSymbol}~${toSymbol}`;
       // const subscriptionItem = channelToSubscription.get(channelString);
-      console.log('!!!!!!!!', currency)
+      // console.log('!!!!!!!!', currency)
       if (fromSymbol === currency.toUpperCase() && toSymbol === 'USD') {
         // setPrice(tradePrice);
         setTradePrice(tradePrice);
@@ -31,7 +34,7 @@ const TradingChartHeader = ({ currency }) => {
   return (
     <div className="w-full  flex flex-row items-center gap-[21px] py-[20px]">
       <div className="flex items-center gap-[4px]">
-        <p className="font-bold text-sm sm:text-xl text-white">BTC</p>
+        <p className="font-bold text-sm sm:text-xl text-white">{ currency.toUpperCase() }</p>
         <div className="flex itms-center gap-[4px]">
           <img className="w-full max-w-[10px] sm:max-w-[19px]" src={DownGrade} alt="" />
           <p className="text-red text-sm sm:text-lg font-bold w-[100px]">{ (tradePrice) }</p>

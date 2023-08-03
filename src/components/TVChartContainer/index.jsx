@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import './index.css';
 import { widget } from '../../charting_library';
 
@@ -83,7 +83,7 @@ export const TVChartContainer = ({ onSetCurrency }) => {
 		return () => {
 			tvWidget.remove();
 		};
-	});
+	}, []);
 
 	return (
 		<div

@@ -9,6 +9,7 @@ import VaultContract from '../contracts/Vault.json';
 import MockDAIContract from '../contracts/MockDAI.json';
 import TradingStorageContract from '../contracts/TradingStorage.json';
 import TradingLogicContract from '../contracts/TradingLogic.json';
+import { fCurrency } from '../utils/formatNumber';
 
 //Contract object
 const vaultContractAddress = "0x74ddE3f67553b939ED335B55eBe056021C0F80a5"  //vault contract address
@@ -30,6 +31,7 @@ const ContractContextProvider = (props) => {
 	const [tradingStorage, setTradingStorage] = useState({});
 	const [tradingLogic, setTradingLogic] = useState({});
 	const [user, setUser] = useState("");
+	const [currency, setCurrency] = useState('btc');
 
 	const loadWeb3 = async() => {
 		if (window.ethereum) {
@@ -75,7 +77,7 @@ const ContractContextProvider = (props) => {
 	}, [])
 
 	return (
-		<ContractContext.Provider value={{dai, vault, tradingStorage, user, setUser, tradingLogic}}>{props.children}</ContractContext.Provider>
+		<ContractContext.Provider value={{dai, vault, tradingStorage, user, setUser, tradingLogic, currency, setCurrency}}>{props.children}</ContractContext.Provider>
 	);
 }
 
