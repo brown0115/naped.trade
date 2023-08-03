@@ -2,7 +2,7 @@ import { useState } from "react";
 import LimitMarketMenu from "../selectMenu/LimitMarketMenu";
 import TraidingMain from "./TraidingMain";
 
-function TradingSettings({modeIs, stopLossMode, takeProfitMode}) {
+function TradingSettings({modeIs, stopLossMode, takeProfitMode, currency}) {
   const [mode, setMode] = useState(modeIs);
   const [stopLossModeIs, setStopLossMode] = useState(stopLossMode)
   const [takeProfitModeIs, setTakeProfitMode] = useState(takeProfitMode)
@@ -12,10 +12,6 @@ function TradingSettings({modeIs, stopLossMode, takeProfitMode}) {
     let isChecked = event.target.checked;
     isChecked ? setMode("advanced") : setMode("basic");
   };
-  const handleMode2 = (event) => {
-    let mode2Is = event.target.closest('.mode2btn').getAttribute('data-mode2')
-    setMode2(mode2Is)
-  }
 
   const handleSelectedValue = (selectedOption) => {
     setLimitMarket(selectedOption.value)
@@ -46,15 +42,15 @@ function TradingSettings({modeIs, stopLossMode, takeProfitMode}) {
 
       <div className="w-full px-[28px]">
         <div className="w-full grid grid-cols-2 gap-[15px] mt-[10px] mb-[38px]">
-          <button onClick={handleMode2} data-mode2="long" className={`${mode2 === 'long' ? 'bg-blue' : ''} mode2btn transition-all p-[9px] sm:p-[13px] bg-black-500 text-white text-md sm:text-lg font-bold rounded-[10px]`}>
+          <button onClick={() => setMode2('long')} className={`${mode2 === 'long' ? 'bg-blue' : ''} mode2btn transition-all p-[9px] sm:p-[13px] bg-black-500 text-white text-md sm:text-lg font-bold rounded-[10px]`}>
             Long
           </button>
-           <button onClick={handleMode2} data-mode2="short" className={`${mode2 === 'short' ? 'bg-blue' : ''} mode2btn transition-all p-[9px] sm:p-[13px] bg-black-500 text-white text-md sm:text-lg font-bold rounded-[10px]`}>
+           <button onClick={() => setMode2('short')} className={`${mode2 === 'short' ? 'bg-blue' : ''} mode2btn transition-all p-[9px] sm:p-[13px] bg-black-500 text-white text-md sm:text-lg font-bold rounded-[10px]`}>
             Short
           </button>
         </div>
 
-        <TraidingMain mode={mode} mode2={mode2} limitMarket={limitMarket} stopLossModeIs={stopLossMode} takeProfitModeIs={takeProfitMode}/>
+        <TraidingMain mode={mode} mode2={mode2} limitMarket={limitMarket} stopLossModeIs={stopLossMode} takeProfitModeIs={takeProfitMode} currency={currency}/>
 
       </div>
     </div>

@@ -1,15 +1,40 @@
+import { useState, useEffect } from 'react';
 import DownGrade from '../../assets/imgs/downgrade.svg'
 import TradingChartHeaderMenu from '../selectMenu/TradingChartHeaderMenu';
 import TradingChartHeaderMenu2 from '../selectMenu/TradingChartHeaderMenu2';
 
-function TradingChartHeader() {
+import { fCurrency } from '../../utils/formatNumber';
+
+const SEVER_URL = import.meta.env.VITE_SEVER_URL;
+const socket = io(`${SEVER_URL}`);
+
+const TradingChartHeader = ({ currency }) => {
+  const [ tradePrice, setTradePrice ] = useState(0);
+
+  useEffect(() => {
+    socket.on(`crypto_trade_data`, (data) => {
+      const exchange = 'crypto';
+      const fromSymbol = data.pair.split('-')[0];
+      const toSymbol = data.pair.split('-')[1];
+      const tradePrice = parseFloat(data.p);
+      const tradeTime = parseInt(data.t, 10);
+      // const channelString = `0~${exchange}~${fromSymbol}~${toSymbol}`;
+      // const subscriptionItem = channelToSubscription.get(channelString);
+      console.log('!!!!!!!!', currency)
+      if (fromSymbol === currency.toUpperCase() && toSymbol === 'USD') {
+        // setPrice(tradePrice);
+        setTradePrice(tradePrice);
+      }
+    })
+  }, [ currency ])
+
   return (
     <div className="w-full  flex flex-row items-center gap-[21px] py-[20px]">
       <div className="flex items-center gap-[4px]">
         <p className="font-bold text-sm sm:text-xl text-white">BTC</p>
         <div className="flex itms-center gap-[4px]">
           <img className="w-full max-w-[10px] sm:max-w-[19px]" src={DownGrade} alt="" />
-          <p className="text-red text-sm sm:text-lg font-bold">19,468.52</p>
+          <p className="text-red text-sm sm:text-lg font-bold w-[100px]">{ (tradePrice) }</p>
         </div>
         <TradingChartHeaderMenu />
       </div>

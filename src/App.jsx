@@ -8,6 +8,7 @@ import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 
+import Web3 from 'web3';
 import ContractContextProvider from './contexts/ContractContext';
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
@@ -23,17 +24,16 @@ const config = createConfig({
 function App() {
 
   return (
-    <ContractContextProvider>
-      <WagmiConfig config={config}>
+    <WagmiConfig config={config}>
+      <ContractContextProvider>
         <>
           <Routes>
             <Route path="/" element={<AdvancedView />} />
             <Route path="/advanced-view" element={<AdvancedView />} />
           </Routes>
         </>
-      </WagmiConfig>
-    </ContractContextProvider>
-     
+      </ContractContextProvider>
+    </WagmiConfig> 
   );
 }
 

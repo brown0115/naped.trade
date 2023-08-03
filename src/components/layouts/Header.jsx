@@ -8,10 +8,12 @@ import icon1 from "../../assets/imgs/icon1.svg"
 import WalletIcon from "../icons/WalletIcon";
 import DotMenuIcon from "../icons/DotMenuIcon";
 import Settings from "../modals/settings/settings";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import { useConnect, useAccount, useDisconnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected'
+
+import { ContractContext } from "../../contexts/ContractContext";
 
 function Header({stopLossMode, takeProfitMode, handleStopLossMode, handleLossProfitMode}) {
 
@@ -25,10 +27,19 @@ function Header({stopLossMode, takeProfitMode, handleStopLossMode, handleLossPro
   const handleSettingModal = ()=> {
     settingModal ? setSettingModal(false) : setSettingModal(true)
   }
+  const { user, setUser } = useContext(ContractContext);
 
   const connectWallet = () => {
-    !isConnected ? connect(): disconnect();
+    if(isConnected)
+      disconnect();
+    else {
+      connect();
+    }    
   }
+
+  useEffect(() => {
+    setUser(address);
+  }, [ isConnected ])
 
   document.addEventListener('click', (e)=> {
     if(!e.target.closest('.settings-btn') && !e.target.closest('.settings-modal')) {

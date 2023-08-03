@@ -1,6 +1,8 @@
 import CollateralMenu from "../selectMenu/CollateralMenu";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import TraidingDetails from "./Details";
+import { CryptoList } from "../../utils/CryptoList";
+import { ContractContext } from '../../contexts/ContractContext';
 
 function TraidingMain({
   mode,
@@ -8,6 +10,7 @@ function TraidingMain({
   limitMarket,
   stopLossModeIs,
   takeProfitModeIs,
+  currency
 }) {
   // Decimal Input
   const [decimalInputValue, setDecimalInputValue] = useState("10.00");
@@ -18,6 +21,23 @@ function TraidingMain({
   const [takeProfit, setTakeProfit] = useState(false);
   const [stopLoss, setStopLoss] = useState(false);
   const [leverageVal, setLeverageVal] = useState(100);
+  const [profit, setProfit] = useState(0);
+  const [loss, setLoss] = useState(0);
+  const { vault, user, dai } = useContext(ContractContext);
+
+  let entryPrice = 1, sliderLoseValue = 1, sliderProfitValue = 1;
+
+  useEffect(() => {
+    const lsSign = mode2 === 'long' ? -1 : 1;
+    const ls = Number(entryPrice) + lsSign * (entryPrice / leverageVal) * (sliderLoseValue / 100);
+    setLoss(ls);
+  }, [mode2, entryPrice, sliderLoseValue, leverageVal]);
+
+  useEffect(() => {
+    const pfSign = mode2 === 'long' ? 1 : -1;
+    const pf = Number(entryPrice) + pfSign * (entryPrice / leverageVal) * (sliderProfitValue / 100);
+    setProfit(pf);
+  }, [mode2, entryPrice, sliderProfitValue, leverageVal]);
 
   const handleTakeProfit = () => {
     takeProfit ? setTakeProfit(false) : setTakeProfit(true);
@@ -35,6 +55,54 @@ function TraidingMain({
   const handleLeverageMultiplierRange = (event) => {
     setLeverageVal(event.target.value * 2.5);
   };
+
+  const getAssetID = (CryptoList) => {
+    for (let i = 0; i < CryptoList.length; i++) {
+      if (CryptoList[i].name == currency) {
+        return CryptoList[i].currencyID;
+      }
+    }
+  };
+
+  const checkOrderType = (marketLimit, longShort) => {
+    if (marketLimit == 'market' && longShort == 'long') {
+      return 2;
+    } else if (marketLimit == 'market' && longShort == 'short') {
+      return 3;
+    } else if (marketLimit == 'limit' && longShort == 'long') {
+      return 0;
+    } else {
+      return 1;
+    }
+  };
+
+  const checkTPnSLInput = (price) => {
+    if (price == 0) {
+      return price;
+    } else {
+      const round = Math.round(price);
+      return round * 10 ** 8;
+    }
+  };
+
+  const openMarketOrder = async (pair, orderType, leverageAmount, collateral, TP, SL) => {
+    await dai.methods
+      .approve(vault._address, collateral)
+      .send({ from: user })
+      .on('transactionHash', (hash) => {
+        vault.methods
+          .openMarketPriceOrder(pair, orderType, leverageAmount, collateral, TP, SL)
+          .send({ from: user })
+          .on('transactionHash', (hash) => {
+            console.log(hash);
+            setTimeout(() => {
+              handleSelectTab(0);
+            }, 7000);
+            setIsShowAlert(true); // show notification
+          });
+      });
+  };
+
 
   return (
     <div className="w-full">
@@ -302,7 +370,17 @@ function TraidingMain({
       </div>
 
       <div className="w-full flex items-center justify-center mt-[27px] mb-[44px]">
-        <button className="w-full max-w-[234px] bg-blue text-white text-lg uppercase font-bold leading-[31px] rounded-[10px] py-[3px]">
+        <button className="w-full max-w-[234px] bg-blue text-white text-lg uppercase font-bold leading-[31px] rounded-[10px] py-[3px]"
+        onClick={() => {
+          openMarketOrder(
+            getAssetID(CryptoList), // need to change according to pair selected
+            checkOrderType(limitMarket, mode2), // 0 - Limit Long 1 - Limit Short - 2 - Market Long 3 - Market Short
+            Math.round(leverageVal),
+            BigInt(decimalInputValue * 10 ** 18),
+            checkTPnSLInput(profit),
+            checkTPnSLInput(loss)
+          );
+        }}>
           {limitMarket + " " + mode2}
         </button>
       </div>

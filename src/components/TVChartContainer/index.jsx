@@ -2,19 +2,22 @@ import React, { useEffect, useRef } from 'react';
 import './index.css';
 import { widget } from '../../charting_library';
 
+import Datafeed from '../_external-pages/datafeed';
+
 function getLanguageFromURL() {
 	const regex = new RegExp('[\\?&]lang=([^&#]*)');
 	const results = regex.exec(window.location.search);
 	return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
-export const TVChartContainer = () => {
+export const TVChartContainer = ({ onSetCurrency }) => {
 	const chartContainerRef = useRef();
 
 	const defaultProps = {
-		symbol: 'AAPL',
-		interval: 'D',
-		datafeedUrl: 'https://demo_feed.tradingview.com',
+		// symbol: 'AAPL',
+		symbol: "Bitfinex:BTC/USD",
+		interval: '1',
+		datafeed: Datafeed,
 		libraryPath: '/charting_library/',
 		chartsStorageUrl: 'https://saveload.tradingview.com',
 		chartsStorageApiVersion: '1.1',
@@ -28,9 +31,11 @@ export const TVChartContainer = () => {
 
 	useEffect(() => {
 		const widgetOptions = {
+			debug: false,
 			symbol: defaultProps.symbol,
 			// BEWARE: no trailing slash is expected in feed URL
-			datafeed: new window.Datafeeds.UDFCompatibleDatafeed(defaultProps.datafeedUrl),
+			// datafeed: new window.Datafeeds.UDFCompatibleDatafeed(defaultProps.datafeedUrl),
+			datafeed: Datafeed,
 			interval: defaultProps.interval,
 			container: chartContainerRef.current,
 			library_path: defaultProps.libraryPath,
@@ -65,6 +70,14 @@ export const TVChartContainer = () => {
 
 				button.innerHTML = 'Check API';
 			});
+
+			tvWidget
+				.activeChart()
+				.onSymbolChanged()
+				.subscribe(null, (data) => {
+					let cur = data.name.split('/')[0].toLowerCase();
+					onSetCurrency(cur);
+				});
 		});
 
 		return () => {
