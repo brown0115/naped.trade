@@ -4,6 +4,10 @@ import TraidingDetails from "./Details";
 import { CryptoList } from "../../utils/CryptoList";
 import { ContractContext } from '../../contexts/ContractContext';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { fCurrency } from '../../utils/formatNumber';
+
 function TraidingMain({
   mode,
   mode2,
@@ -126,6 +130,10 @@ function TraidingMain({
   };
 
   const openMarketOrder = async (pair, orderType, leverageAmount, collateral, TP, SL) => {
+    if(user == undefined) {
+      toast.error("Connect Wallet!")
+      return;
+    }
     await dai.methods
       .approve(vault._address, collateral)
       .send({ from: user })
@@ -146,6 +154,7 @@ function TraidingMain({
 
   return (
     <div className="w-full">
+      <ToastContainer />
       <div
         className={`grid ${
           mode === "advanced" ? "sm:grid-cols-2 gap-x-[15px] gap-y-[21px]" : ""
@@ -180,7 +189,7 @@ function TraidingMain({
                 <div className="min-h-[42px] pl-[14px] pr-[6px] py-[5px] bg-black-500 rounded-[10px] flex items-center justify-between">
                   {takeProfit ? (
                     <>
-                      ${profit}
+                      {fCurrency(profit)}
                       <div className="flex items-center gap-[5px]">
                         <span className="text-green">{takeProfitRange}%</span>
                         <div
@@ -269,7 +278,7 @@ function TraidingMain({
                 <div className="min-h-[42px] pl-[14px] pr-[6px] py-[5px] bg-black-500 rounded-[10px] flex items-center justify-between">
                   {stopLoss ? (
                     <>
-                      ${loss}
+                      {fCurrency(loss)}
                       <div className="flex items-center gap-[5px]">
                         <span className="text-red">{stopLossRange}%</span>
                         <div
