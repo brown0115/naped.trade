@@ -1,4 +1,4 @@
-function TraidingDetails() {
+function TraidingDetails({ entryPrice }) {
   return (
     <div className="w-full flex flex-col gap-[43px]">
       <div className="w-full flex items-center justify-between">
@@ -12,7 +12,7 @@ function TraidingDetails() {
         </div>
         <div className="w-full flex items-center justify-between">
           <p className="text-base text-white font-normal">Entry Price</p>
-          <p className="text-base text-white font-normal">19,368.52</p>
+          <p className="text-base text-white font-normal">{ entryPrice }</p>
         </div>
         <div className="w-full flex items-center justify-between">
           <p className="text-base text-white font-normal">Fees</p>

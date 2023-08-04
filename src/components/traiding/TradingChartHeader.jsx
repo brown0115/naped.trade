@@ -5,16 +5,21 @@ import TradingChartHeaderMenu2 from '../selectMenu/TradingChartHeaderMenu2';
 
 import { fCurrency } from '../../utils/formatNumber';
 
-const SEVER_URL = import.meta.env.VITE_SEVER_URL;
-const socket = io(`${SEVER_URL}`);
 
-const TradingChartHeader = ({ currency }) => {
+
+const TradingChartHeader = ({ currency, socket }) => {
   const [ tradePrice, setTradePrice ] = useState(0);
 
-  const listener = 
-
   useEffect(() => {
-    socket.removeAllListeners(`crypto_trade_data`);
+    socket.on('connect', () => {
+    });
+
+    socket.on('disconnect', (reason) => {
+    });
+
+    socket.on('error', (error) => {
+    });
+
     socket.on(`crypto_trade_data`, (data) => {
       const exchange = 'crypto';
       const fromSymbol = data.pair.split('-')[0];
@@ -23,12 +28,17 @@ const TradingChartHeader = ({ currency }) => {
       const tradeTime = parseInt(data.t, 10);
       // const channelString = `0~${exchange}~${fromSymbol}~${toSymbol}`;
       // const subscriptionItem = channelToSubscription.get(channelString);
-      // console.log('!!!!!!!!', currency)
       if (fromSymbol === currency.toUpperCase() && toSymbol === 'USD') {
-        // setPrice(tradePrice);
         setTradePrice(tradePrice);
       }
     })
+
+    return () => {
+      socket.off('crypto_trade_data');
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('error');
+    };
   }, [ currency ])
 
   return (

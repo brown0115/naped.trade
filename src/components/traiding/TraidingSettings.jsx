@@ -2,7 +2,7 @@ import { useState } from "react";
 import LimitMarketMenu from "../selectMenu/LimitMarketMenu";
 import TraidingMain from "./TraidingMain";
 
-function TradingSettings({modeIs, stopLossMode, takeProfitMode, currency}) {
+function TradingSettings({modeIs, stopLossMode, takeProfitMode, currency, socket}) {
   const [mode, setMode] = useState(modeIs);
   const [stopLossModeIs, setStopLossMode] = useState(stopLossMode)
   const [takeProfitModeIs, setTakeProfitMode] = useState(takeProfitMode)
@@ -50,7 +50,7 @@ function TradingSettings({modeIs, stopLossMode, takeProfitMode, currency}) {
           </button>
         </div>
 
-        <TraidingMain mode={mode} mode2={mode2} limitMarket={limitMarket} stopLossModeIs={stopLossMode} takeProfitModeIs={takeProfitMode} currency={currency}/>
+        <TraidingMain mode={mode} mode2={mode2} limitMarket={limitMarket} stopLossModeIs={stopLossMode} takeProfitModeIs={takeProfitMode} currency={currency} socket={socket}/>
 
       </div>
     </div>

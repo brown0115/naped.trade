@@ -10,10 +10,11 @@ function TraidingMain({
   limitMarket,
   stopLossModeIs,
   takeProfitModeIs,
-  currency
+  currency,
+  socket
 }) {
   // Decimal Input
-  const [decimalInputValue, setDecimalInputValue] = useState("10.00");
+  const [decimalInputValue, setDecimalInputValue] = useState("27.59");
   const handleDecimalInputChange = (e) => {
     setDecimalInputValue(e.target.value);
   };
@@ -23,21 +24,60 @@ function TraidingMain({
   const [leverageVal, setLeverageVal] = useState(100);
   const [profit, setProfit] = useState(0);
   const [loss, setLoss] = useState(0);
+  const [liqPrice, setLiqPrice] = useState(0);
+  const [tradePrice, setTradePrice] = useState(0);
+  const [takeProfitRange, setTakeProfitRange] = useState(5);
+  const [stopLossRange, setStopLossRange] = useState(5);
+
   const { vault, user, dai } = useContext(ContractContext);
-
-  let entryPrice = 1, sliderLoseValue = 1, sliderProfitValue = 1;
-
-  useEffect(() => {
-    const lsSign = mode2 === 'long' ? -1 : 1;
-    const ls = Number(entryPrice) + lsSign * (entryPrice / leverageVal) * (sliderLoseValue / 100);
-    setLoss(ls);
-  }, [mode2, entryPrice, sliderLoseValue, leverageVal]);
 
   useEffect(() => {
     const pfSign = mode2 === 'long' ? 1 : -1;
-    const pf = Number(entryPrice) + pfSign * (entryPrice / leverageVal) * (sliderProfitValue / 100);
+    const pf = Number(tradePrice) + pfSign * (tradePrice / leverageVal) * (takeProfitRange / 100);
     setProfit(pf);
-  }, [mode2, entryPrice, sliderProfitValue, leverageVal]);
+  }, [mode2, tradePrice, takeProfitRange, leverageVal]);
+
+  useEffect(() => {
+    const pfSign = mode2 === 'long' ? -1 : 1;
+    const pf = Number(tradePrice) + pfSign * (tradePrice / leverageVal) * (stopLossRange / 100);
+    setLoss(pf);
+  }, [mode2, tradePrice, stopLossRange, leverageVal]);
+
+  useEffect(() => {
+    socket.on(`crypto_trade_data`, (data) => {
+      const exchange = 'crypto';
+      const fromSymbol = data.pair.split('-')[0];
+      const toSymbol = data.pair.split('-')[1];
+      const tradePrice = parseFloat(data.p);
+      const tradeTime = parseInt(data.t, 10);
+      // const channelString = `0~${exchange}~${fromSymbol}~${toSymbol}`;
+      // const subscriptionItem = channelToSubscription.get(channelString);
+      if (fromSymbol === currency.toUpperCase() && toSymbol === 'USD') {
+        setTradePrice(tradePrice);
+      }
+    })
+    
+    return () => {
+      socket.off('crypto_trade_data');
+    };
+  }, [ currency ])
+
+  //sliderValue: leverageVal
+  //collateralValue: decimalInputValue
+  //longShort: mode2
+  //cPrice: tradePrice
+
+  useEffect(() => {
+    // Liquidation Price Distance = Open Price * (Collateral * 0.9 ) / Collateral / Leverage.
+    // If Long: Open Price - Liquidation Price Distance
+    // If Short: Open Price + Liquidation Price Distance.
+    const priceDis = (Number(tradePrice) * (decimalInputValue * 0.9)) / decimalInputValue / leverageVal;
+
+    const lql = Number(tradePrice) - priceDis;
+    const lqs = Number(tradePrice) + priceDis;
+    const lq = mode2 === 'long' ? lql : lqs;
+    setLiqPrice(lq.toFixed(3));
+  }, [leverageVal, decimalInputValue, tradePrice, mode2]);
 
   const handleTakeProfit = () => {
     takeProfit ? setTakeProfit(false) : setTakeProfit(true);
@@ -47,10 +87,10 @@ function TraidingMain({
   };
 
   const handleTakeProfitRange = (event) => {
-    const val = event.target.value;
+    setTakeProfitRange(event.target.value)
   };
   const handleStopLossRange = (event) => {
-    const val = event.target.value;
+    setStopLossRange(event.target.value)
   };
   const handleLeverageMultiplierRange = (event) => {
     setLeverageVal(event.target.value * 2.5);
@@ -131,7 +171,7 @@ function TraidingMain({
             <div className="flex flex-col gap-[16px]">
               <p className="font-bold text-white text-sm">Entry Price</p>
               <div className="min-h-[42px] px-[8px] py-[5px] bg-black-500 rounded-[10px] flex items-center justify-center">
-                $30,184.60000
+                ${tradePrice}
               </div>
             </div>
             {takeProfitModeIs === "percentage" ? (
@@ -140,9 +180,9 @@ function TraidingMain({
                 <div className="min-h-[42px] pl-[14px] pr-[6px] py-[5px] bg-black-500 rounded-[10px] flex items-center justify-between">
                   {takeProfit ? (
                     <>
-                      $30,184.60000
+                      ${profit}
                       <div className="flex items-center gap-[5px]">
-                        <span className="text-green">770%</span>
+                        <span className="text-green">{takeProfitRange}%</span>
                         <div
                           onClick={handleTakeProfit}
                           className="w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
@@ -192,7 +232,8 @@ function TraidingMain({
                       type="range"
                       onChange={handleTakeProfitRange}
                       min={0}
-                      max={900}
+                      max={1000}
+                      step={5}
                       className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
                     />
                     <div className="flex items-center justify-between gap-[15px] px-[20px]">
@@ -216,7 +257,7 @@ function TraidingMain({
                   </div>
                   <div className="text-sm min-h-[42px] pl-[14px] py-[5px] bg-black-500 rounded-[10px] flex items-center">
                     <span className="text-green mr-[4px]">+$</span>
-                    Profit
+                    <input type="text" className="w-full bg-transparent pr-[10px]  outline-none border-none"/>
                   </div>
                 </div>
               </div>
@@ -228,9 +269,9 @@ function TraidingMain({
                 <div className="min-h-[42px] pl-[14px] pr-[6px] py-[5px] bg-black-500 rounded-[10px] flex items-center justify-between">
                   {stopLoss ? (
                     <>
-                      $30,184.60000
+                      ${loss}
                       <div className="flex items-center gap-[5px]">
-                        <span className="text-red">770%</span>
+                        <span className="text-red">{stopLossRange}%</span>
                         <div
                           onClick={handleStopLoss}
                           className="w-[31px] rounded-[10px] cursor-pointer h-[31px] bg-blueDark flex items-center justify-center"
@@ -279,6 +320,7 @@ function TraidingMain({
                     <input
                       type="range"
                       onChange={handleStopLossRange}
+                      value={stopLossRange}
                       className="transparent h-1.5 w-full cursor-pointer appearance-none rounded-lg border-transparent bg-gradientMain"
                     />
                     <div className="flex items-center justify-between gap-[8px] px-[20px]">
@@ -305,7 +347,7 @@ function TraidingMain({
                   </div>
                   <div className="text-sm min-h-[42px] pl-[14px] py-[5px] bg-black-500 rounded-[10px] flex items-center">
                     <span className="text-red mr-[4px]">-$</span>
-                    Loss
+                    <input type="text" className="w-full bg-transparent pr-[10px]  outline-none border-none"/>
                   </div>
                 </div>
               </div>
@@ -334,7 +376,7 @@ function TraidingMain({
             <p className="text-xs text-grayDark font-normal">
               Liquidation Price:
             </p>
-            <p className="text-xs text-white font-normal">17,419.82</p>
+            <p className="text-xs text-white font-normal">{ liqPrice }</p>
           </div>
         </div>
         <div className="flex flex-col gap-[11px] px-[15px]">
@@ -385,7 +427,7 @@ function TraidingMain({
         </button>
       </div>
 
-      <TraidingDetails />
+      <TraidingDetails entryPrice={tradePrice}/>
     </div>
   );
 }
